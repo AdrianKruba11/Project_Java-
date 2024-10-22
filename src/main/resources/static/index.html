@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikacja Biblioteki</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>Witamy w Aplikacji Biblioteki!</h1>
+    <nav>
+        <ul>
+            <li><a href="#books">Książki</a></li>
+            <li><a href="#register">Rejestracja</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section id="books">
+        <h2>Lista Książek</h2>
+        <ul id="book-list"></ul>
+    </section>
+
+    <section id="register">
+        <h2>Rejestracja</h2>
+        <form id="registration-form">
+            <input type="text" id="username" placeholder="Nazwa użytkownika" required>
+            <input type="password" id="password" placeholder="Hasło" required>
+            <input type="password" id="confirm-password" placeholder="Potwierdź hasło" required>
+            <button type="submit">Zarejestruj się</button>
+        </form>
+        <div id="registration-message"></div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2024 Aplikacja Biblioteki</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
