@@ -16,6 +16,6 @@ public class UserController {
     public User registerNewUser(@RequestParam String username,
                                 @RequestParam String password,
                                 @RequestParam String role) {
-        return userService.registerNewUser(username, password, role);
+        return userService.registerNewUser(username, password);
     }
 }

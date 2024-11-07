@@ -15,11 +15,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public User registerNewUser(String username, String password, String role) {
+    public User registerNewUser(String username, String password) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setRole(role);
+        user.setRole("user");
         return userRepository.save(user);
     }
 }
