@@ -10,25 +10,27 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Wyłączenie CSRF
-        http.csrf(csrf -> csrf.disable())
-                // Konfiguracja autoryzacji
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/**").permitAll()
-                       // .requestMatchers("/api/books/**").hasAnyRole("USER", "ADMIN")
-                       // .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                // Użycie HTTP Basic Authentication
-                .httpBasic(basic -> basic.disable()); // Wyłączenie Basic Auth, jeśli nie jest potrzebne
 
-        return http.build();
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests() // Zamiast authorizeRequests()
+                .requestMatchers("/register", "/login", "/css/**").permitAll() // Zamiast antMatchers()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();
     }
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

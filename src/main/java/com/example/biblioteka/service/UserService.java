@@ -1,5 +1,6 @@
 package com.example.biblioteka.service;
 
+import com.example.biblioteka.controller.dto.Userdto;
 import com.example.biblioteka.model.User;
 import com.example.biblioteka.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,17 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
 
-    public User registerNewUser(String username, String password, String role) {
+    public void registerUser(Userdto userdto) {
+        if (!userdto.isPasswordConfirmed()) {
+            throw new IllegalArgumentException("Hasła nie są zgodne");
+        }
+
         User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRole(role);
-        return userRepository.save(user);
+        user.setUsername(userdto.getUsername());
+        user.setPassword(passwordEncoder.encode(userdto.getPassword()));
+        userRepository.save(user);
     }
+
+
+
 }
