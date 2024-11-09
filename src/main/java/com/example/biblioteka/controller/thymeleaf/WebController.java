@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,17 +26,16 @@ public class WebController {
     }
 
     @PostMapping("/register")
-    public String register(Model model, @ModelAttribute("userdto") Userdto userdto) {
-        model.addAttribute("userdto", userdto);
-        log.debug("reveived userdto: [{}]", userdto);
-        if(confirmPassword(userdto)) {
-            userService.registerNewUser(userdto.getUsername(), userdto.getPassword());
-            model.addAttribute("result","Rejestracja się powiodła");
-        }
-        else
-            model.addAttribute("result","Wydupcyło się");
-        return "index";
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("userdto", new Userdto());
+        return "register";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 
     private boolean confirmPassword(Userdto userdto) {
         return userdto.getPassword().equals(userdto.getConfirmPassword());

@@ -14,4 +14,9 @@ public class Userdto {
 
     private String confirmPassword;
 
+
+    public boolean isPasswordConfirmed() {
+        return password != null && password.equals(confirmPassword);
+    }
+
 }

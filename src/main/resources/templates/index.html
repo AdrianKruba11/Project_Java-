@@ -9,13 +9,15 @@
 <body>
 <header>
     <h1>Witamy w Aplikacji Biblioteki!</h1>
-    <div th:if="${result!=null}">
-        <h2 th:text="${result}"/>
+    <!-- Wyświetlanie wiadomości, jeśli jest dostępna -->
+    <div th:if="${result != null}">
+        <h2 th:text="${result}"></h2>
     </div>
     <nav>
         <ul>
             <li><a href="#books">Książki</a></li>
-            <li><a href="#register">Rejestracja</a></li>
+            <li><a th:href="@{/register}">Rejestracja</a></li> <!-- Link do rejestracji -->
+            <li><a th:href="@{/login}">Logowanie</a></li> <!-- Link do logowania -->
         </ul>
     </nav>
 </header>
@@ -24,21 +26,32 @@
     <section id="books">
         <h2>Lista Książek</h2>
         <ul id="book-list">
-            <li th:each="book: ${books}">
-                <a th:text="${book.title}"></a>
-                <a th:text="${book.author}"></a>
-                <a th:text="${book.isbn}"></a>
+            <!-- Wyświetlanie listy książek -->
+            <li th:each="book : ${books}">
+                <span th:text="${book.title}">Tytuł</span> -
+                <span th:text="${book.author}">Autor</span> -
+                <span th:text="${book.isbn}">ISBN</span>
             </li>
         </ul>
     </section>
 
     <section id="register">
         <h2>Rejestracja</h2>
-        <form action="#" th:action="@{/register}" id="registration-form" th:object="${userdto}" method="post">
-            <input type="text" id="username" placeholder="Nazwa użytkownika" required th:field="*{username}">
-            <input type="password" id="password" placeholder="Hasło" required  th:field="*{password}">
-            <input type="password" id="confirm-password" placeholder="Potwierdź hasło" required  th:field="*{confirmPassword}">
-            <input type="submit">Zarejestruj się</input>
+        <!-- Formularz rejestracji -->
+        <form th:action="@{/register}" th:object="${userdto}" method="post">
+            <div>
+                <label for="username">Nazwa użytkownika:</label>
+                <input type="text" id="username" placeholder="Nazwa użytkownika" required th:field="*{username}">
+            </div>
+            <div>
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" placeholder="Hasło" required th:field="*{password}">
+            </div>
+            <div>
+                <label for="confirmPassword">Potwierdź hasło:</label>
+                <input type="password" id="confirmPassword" placeholder="Potwierdź hasło" required th:field="*{confirmPassword}">
+            </div>
+            <button type="submit">Zarejestruj się</button>
         </form>
         <div id="registration-message"></div>
     </section>
