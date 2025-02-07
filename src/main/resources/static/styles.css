@@ -1,0 +1,469 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Vinyl');
+@import url('https://fonts.googleapis.com/css?family=Audiowide');
+
+
+
+* {
+    cursor: crosshair;
+    font-family: "Audiowide", sans-serif;
+}
+
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    color: #ffffff;
+    font-family: "Audiowide", sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #007bff;
+}
+
+
+
+
+button:hover {
+    cursor: crosshair;
+}
+
+
+
+::-webkit-scrollbar {
+    background: #666;
+    z-index: 1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 15px;
+    z-index: 1;
+    border: 1px solid black;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: #AAA;
+    z-index: 1;
+}
+
+::-moz-selection {
+    background: #888;
+    color: #333;
+}
+
+.header {
+    text-shadow: blue 0px 0px 2px, black 0px 0px 3px;
+    position: relative;
+    width: 100%;
+    padding: 15px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: 0.5s;
+}
+
+.header:hover::before {
+    left: 100%;
+}
+
+.navbar a {
+    color: #90F;
+    font-size: 2vh;
+    text-decoration: none;
+    margin-right: 35px;
+    transition: 0.1s;
+}
+
+.navbar a:hover {
+    color: #eb2828;
+}
+
+
+#menu-icon {
+    font-size: 36px;
+    color: #fff;
+    display: none;
+}
+
+
+
+#bannerIcon {
+    padding-left: 15px;
+    padding-top: 3px;
+    width: 13vw;
+    z-index: 1;
+    animation: Flying 1.75s linear infinite;
+}
+
+@keyframes Flying {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.dark {
+
+    background: linear-gradient(135deg, #eb2828, #2f2fff);
+}
+
+
+.footerBottom {
+
+    background-color: #000;
+    padding: 12px;
+    text-align: center;
+    height: 5.5vh;
+}
+
+.footerBottom p {
+    color: white;
+    font-size: 1.5vh;
+    font-family: "Unispace";
+}
+
+.designer {
+
+    font-family: "BankGothic";
+    font-size: 2.5vh;
+    opacity: 0.8;
+    letter-spacing: -3px;
+    font-weight: 550;
+    margin: 0px 5px;
+    color: rgba(180, 0, 0, 0.85);
+    text-decoration: none;
+    background: linear-gradient( 135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.7) 100%,
+    transparent 0%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shine 1.75s linear infinite;
+    background-size: 200% 100%;
+}
+
+@keyframes shine {
+    from {
+        background-position: 100% center;
+    }
+    to {
+        background-position: -100% center;
+    }
+}
+
+
+#loginModal,
+#registerModal {
+    color: rgba(255, 255, 255, 0.85);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(5px);
+    display: none;
+}
+
+
+#loginModal.active,
+#registerModal.active {
+    display: block;
+}
+
+
+
+.modal-content {
+    top: 25vh;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 35px rgba(0, 0, 0, 1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.modal-header {
+    border: none;
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-close {
+
+    background-color: rgba(255, 0, 0, 1);
+}
+
+
+.modal-body input {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+
+
+
+
+
+.table td,
+.table th {
+
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.loginBTN,
+.registerBTN {
+
+    background-color: #0B0;
+    color: #FFF;
+    border: 0px;
+    border-radius: 5px;
+}
+
+.loginBTN:hover,
+.registerBTN:hover {
+
+    background-color: #0A0;
+}
+
+.book-shop {
+    position: relative;
+    text-align: center;
+    padding: 50px;
+    text-shadow: black 0px 0px 3px, black 0px 0px 4px;
+    box-shadow: 0 0 55px rgba(0, 0, 0, 1);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.book-shop h2 {
+    color: #ccc;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.book-shop p {
+    color: #888;
+    margin-bottom: 20px;
+}
+
+
+.carousel {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.thumb {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.carousel-controls .prev,
+.carousel-controls .next {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid rgba( 255, 255, 255, 0.1);
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.carousel-controls .prev:hover,
+.carousel-controls .next:hover {
+    background-color: #555;
+}
+
+.book-shop {
+
+    margin-top: 100px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+}
+
+
+body {
+    background-image: url("/Wallpaper.jpg");
+    background-size: cover;
+    background-position: center;
+    animation: zoomInOut 10s infinite alternate;
+}
+
+@keyframes zoomInOut {
+    0% {
+        background-size: 155%;
+    }
+    50% {
+        background-size: 185%;
+    }
+    100% {
+        background-size: 155%;
+    }
+}
+
+#head {
+
+    text-shadow: black 0px 0px 3px, black 0px 0px 4px;
+    position: absolute;
+    width: 100%;
+    height: 19.25%;
+    border-bottom: 3px solid rgba( 255, 255, 255, 0.5);
+    border-top: 3px solid rgba( 255, 255, 255, 0.5);
+}
+
+#head h1 {
+
+    padding-top: 20px;
+    font-size: 50px;
+}
+#head p {
+    font-size: 25px;
+    padding: 5px;
+}
+
+
+footer {
+    border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+    border-top: 3px solid rgba(255, 255, 255, 0.5);
+    margin-top: 20vh;
+    width: 100%;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+    padding: 20px 0;
+    /* Add padding for better spacing */
+}
+
+.footerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row.footer-contact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* Center the content */
+    padding: 0 20px;
+}
+
+.Kontakt {
+    text-align: left;
+    flex: 1;
+    padding-left: 20px;
+    /* Adjust as needed */
+}
+
+.footer-icons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 25px;
+    flex: 1;
+    padding-right: 20px;
+    /* Adjust as needed */
+}
+
+.footer-icons a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 24px;
+    transition: color 0.3s ease;
+}
+
+.footer-icons a:hover {
+    color: #00aaff;
+}
+
+#copyright {
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+    border-top: 1px solid #fff;
+    padding-top: 10px;
+}
+
+.footerContainer p.mt-3 {
+    margin: 0;
+    /* Ensure no extra margin interferes */
+}
+
+#head {
+    position: relative;
+    /* Changed to relative for automatic positioning */
+}
+
+
+
+.nav-icon-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #0d6efd;
+    text-decoration: none;
+    font-size: 19px;
+    margin: 10px 0;
+}
+
+.nav-icon-link:hover {
+    color: #0a58ca;
+    text-decoration: none;
+}
+
+.nav-icon {
+    font-size: 24px;
+}
+
+.user-info{
+    color: #ddd;
+    font-size: 14px;
+    padding-top: 15px;
+    padding-right: 20px;
+
+}

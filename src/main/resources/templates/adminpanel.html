@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head lang="pl" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Biblioteka Pans - Wypożyczaj materiały naukowe i publikacje biblioteki" name="description">
+    <meta content="bilioteka,książki,wypożyczanie,PANS" name="keywords">
+    <title>Biblioteka Akademicka</title>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+          referrerpolicy="no-referrer" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/styles.css}" type="text/css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</head>
+<body>
+
+<!-- Login Modal -->
+<div aria-hidden="true" aria-labelledby="loginModalLabel" class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Logowanie</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label" for="login">Type Your Username:</label>
+                        <input class="form-control" id="login" name="login" required type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Type Password:</label>
+                        <input class="form-control" id="password" name="password" required type="password">
+                    </div>
+                    <div class="text-end">
+                        <button class="btn btn-success loginBTN" onclick="submitLogin()" type="button">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Register Modal -->
+<div aria-hidden="true" aria-labelledby="registerModalLabel" class="modal fade" id="registerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" th:action="@{/register}">
+                    <div class="mb-3">
+                        <label class="form-label" for="username">Type your username:</label>
+                        <input class="form-control" id="username" name="username" required type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Type Your e-mail:</label>
+                        <input class="form-control" id="email" name="email" required type="email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Type password:</label>
+                        <input class="form-control" id="haslo" name="password" required type="password">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="confirmPassword">Confirm password:</label>
+                        <input class="form-control" id="confirmPassword" name="confirmPassword" required
+                               type="password">
+                    </div>
+                    <div class="text-end">
+                        <button class="btn-success registerBTN" type="submit">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Header Section -->
+<div class="dark py-3 text-center" id="head">
+    <div class="container">
+        <h1 class="mb-0">Biblioteka <span class="text-primary">PANS</span></h1>
+        <p class="lead">Wypożyczaj, oddawaj i ciesz się lekturą!</p>
+    </div>
+</div>
+
+<!-- Header Navbar -->
+<header class="header">
+    <a href="/index">
+        <img alt="Pans" class="img-fluid" id="bannerIcon" src="/LogoPans.png">
+    </a>
+    <i class='bx bx-menu' id="menu-icon"></i>
+    <nav class="navbar">
+        <!-- Show these links only if the user is not logged in -->
+        <a data-bs-target="#loginModal" data-bs-toggle="modal" href="#" id="authLink1" th:if="${session.username == null}">Login</a>
+        <a data-bs-target="#registerModal" data-bs-toggle="modal" href="#" id="authLink2" th:if="${session.username == null}">Register</a>
+
+        <!-- Show these links only if the user is logged in -->
+        <a href="/adminpanel" id="AdminPanel" th:if="${session.username != null and session.role == 'ADMIN'}" onclick="loadUserPanel(event)">Admin Panel</a>
+        <a href="/userpanel" id="UserPanel" th:if="${session.username != null and session.role == 'USER'}" onclick="loadUserPanel(event)">User Panel</a>
+        <a href="#" id="logoutLink" th:if="${session.username != null}" onclick="submitLogout()">Logout</a>
+    </nav>
+</header>
+
+
+<!-- Main Content -->
+<main class="container py-5, contentArea">
+    <div id="content">
+
+
+        <section class="book-shop">
+
+            <header>
+                <h1>Panel Administratora Biblioteki PANS</h1>
+                <p>Witaj, <strong th:text="${session.username}"></strong></p>
+                <div id="responseMessage" style="color: red; font-size: 14px;"></div>
+            </header>
+
+            <nav>
+                <a class="nav-icon-link" data-bs-target="#addBooksModal" data-bs-toggle="modal" href="#">
+                    <span class="nav-icon">📚</span>
+                    Dodaj książkę
+                </a>
+                <a class="nav-icon-link" data-bs-target="#returnBooksModal" data-bs-toggle="modal" href="#">
+                    <span class="nav-icon">🔄</span>
+                    Zwrot książki
+                </a>
+                <a class="nav-icon-link" data-bs-target="#deleteUserModal" data-bs-toggle="modal" href="#">
+                    <span class="nav-icon">🗑️</span>
+                    Usuń użytkownika
+                </a>
+            </nav>
+
+        </section>
+
+
+
+        <!-- Add Books Modal -->
+        <div class="modal fade" id="addBooksModal" tabindex="-1" aria-labelledby="addBooksModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addBooksModalLabel">Dodawanie Książek</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/addbooks" method="post">
+                            <div>
+                                <label for="title" class="form-label">Tytuł</label>
+                                <input type="text" class="form-control" id="title" name="title" required>
+                            </div>
+                            <div>
+                                <label for="author" class="form-label">Autor</label>
+                                <input type="text" class="form-control" id="author" name="author" required>
+                            </div>
+                            <div>
+                                <label for="genre" class="form-label">Gatunek</label>
+                                <input type="text" class="form-control" id="genre" name="genre" required>
+                            </div>
+                            <div>
+                                <label for="quantity" class="form-label">Liczba Egzemplarzy</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" required>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Return Books Modal -->
+        <div aria-hidden="true" aria-labelledby="returnBooksModalLabel" class="modal fade" id="returnBooksModal"
+             tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="returnBooksModalLabel">Rejestracja Zwrotu Książki</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" th:action="@{/returnedbooks}">
+                            <div class="mb-3">
+                                <label class="form-label" for="bookId">ID książki</label>
+                                <input class="form-control" id="bookId" name="bookId" type="number" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="returnDate">Data zwrotu</label>
+                                <input class="form-control" id="returnDate" name="returnDate" type="date" required>
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-success" type="submit">Zapisz zwrot</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete User Modal -->
+        <div aria-hidden="true" aria-labelledby="deleteUserModalLabel" class="modal fade" id="deleteUserModal"
+             tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteUserModalLabel">Usuń Użytkownika</h5>
+                        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" th:action="@{/delete-user}">
+                            <div class="mb-3">
+                                <label class="form-label" for="userid">ID Użytkownika</label>
+                                <input class="form-control" id="userid" name="userid" required type="text"/>
+                            </div>
+                            <div class="text-end">
+                                <button class="btn btn-danger" type="submit">Usuń</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</main>
+
+
+<footer>
+    <div class="footerContainer">
+        <div class="row footer-contact">
+            <div class="col-md-4 Kontakt">
+                <h5>Kontakt</h5>
+                <p><i class="fas fa-envelope"></i> kontakt@biblioteka.pl</p>
+                <p><i class="fas fa-phone"></i> +48 123 456 789</p>
+                <p><i class="fas fa-map-marker-alt"></i> ul. Czarnieckiego 16, 37-500 Jarosław</p>
+                <div class="footer-icons">
+                    <a aria-label="Facebook" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a aria-label="Twitter" href="#"><i class="fab fa-twitter"></i></a>
+                    <a aria-label="Instagram" href="#"><i class="fab fa-instagram"></i></a>
+                    <a aria-label="LinkedIn" href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <div id="copyright">
+                    <p class="mt-3">&copy; 2025 Biblioteka Akademicka. Wszystkie prawa zastrzeżone.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+</footer>
+
+
+<div class="footerBottom">
+    <p>Designed by
+        <a class="designer" href="https://t.me/Mus1nQ3" target="_blank"> Mus1n </a>&
+        <a class="designer" href="https://t.me/AdrianKruba" target="_blank"> Kruba </a>
+    </p>
+
+</div>
+
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/Scripts.js"></script>
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

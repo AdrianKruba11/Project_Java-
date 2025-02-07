@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head lang="pl" xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Biblioteka Pans - Wypożyczaj materiały naukowe i publikacje biblioteki">
+    <meta name="keywords" content="bilioteka,książki,wypożyczanie,PANS">
+    <title>Biblioteka Akademicka</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</head>
+<body>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Logowanie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" method="POST">
+                    <div class="mb-3">
+                        <label for="login" class="form-label">Type Your Username:</label>
+                        <input type="text" class="form-control" name="login" id="login" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Type Password:</label>
+                        <input type="password" class="form-control" name="password" id="password" required>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-success loginBTN" onclick="submitLogin()">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/register}" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Type your username:</label>
+                        <input type="text" class="form-control" name="username" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Type Your e-mail:</label>
+                        <input type="email" class="form-control" name="email" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Type password:</label>
+                        <input type="password" class="form-control" name="password" id="haslo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm password:</label>
+                        <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" required>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn-success registerBTN">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Header Section -->
+<div class="dark py-3 text-center" id="head">
+    <div class="container">
+        <h1 class="mb-0">Biblioteka <span class="text-primary">PANS</span></h1>
+        <p class="lead">Wypożyczaj, oddawaj i ciesz się lekturą!</p>
+    </div>
+</div>
+
+<!-- Header Navbar -->
+<header class="header">
+    <a href="/index">
+        <img alt="Pans" class="img-fluid" id="bannerIcon" src="/LogoPans.png">
+    </a>
+    <i class='bx bx-menu' id="menu-icon"></i>
+    <nav class="navbar">
+        <!-- Show these links only if the user is not logged in -->
+        <a data-bs-target="#loginModal" data-bs-toggle="modal" href="#" id="authLink1" th:if="${session.username == null}">Login</a>
+        <a data-bs-target="#registerModal" data-bs-toggle="modal" href="#" id="authLink2" th:if="${session.username == null}">Register</a>
+
+        <!-- Show these links only if the user is logged in -->
+        <p class="user-info" th:if="${session.username != null}">
+            Witaj: <strong th:text="${session.username}">Brak użytkownika </strong>
+            (Rola: <strong th:text="${session.role}">Brak roli</strong>)
+        </p>
+
+        <a href="/adminpanel" id="AdminPanel" th:if="${session.username != null and session.role == 'ADMIN'}" onclick="loadUserPanel(event)"> Admin Panel</a>
+        <a href="/userpanel" id="UserPanel" th:if="${session.username != null and session.role == 'USER'}" onclick="loadUserPanel(event)">User Panel</a>
+        <a href="#" id="logoutLink" th:if="${session.username != null}" onclick="submitLogout()">Logout</a>
+    </nav>
+</header>
+
+
+
+
+
+
+
+<!-- Main Content -->
+<main class="container py-5, contentArea">
+    <div id="content">
+
+
+        <section class="book-shop">
+
+
+
+            <nav>
+                <a href="#" class="nav-icon-link" data-bs-toggle="modal" data-bs-target="#rentedBooksModal">
+                    <span class="nav-icon">📖</span>
+                    Moje Wypożyczenia
+                </a>
+                <a href="#" class="nav-icon-link" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                    <span class="nav-icon">🔒</span>
+                    Zmień Hasło
+                </a>
+            </nav>
+
+        </section>
+
+
+
+        <!-- Rented Books Modal -->
+        <div class="modal fade" id="rentedBooksModal" tabindex="-1" aria-labelledby="rentedBooksModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rentedBooksModalLabel">Moje Wypożyczenia</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+
+
+
+
+
+
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Tytuł</th>
+                                <th>Autor</th>
+                                <th>Data Zwrotu</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="book : ${books}">
+                                <td><span th:text="${book.title}">Book Title</span></td>
+                                <td><span th:text="${book.author}">Book Author</span></td>
+                                <td th:each="rental : ${rentals}"
+                                    th:if="${rental.book != null and rental.book.id == book.id}">
+
+                                    <span th:text="${rental.rentedAt}">Rental Date</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
+
+
+
+
+
+
+                        <div class="mt-3">
+                            <p>Proszę zwrócić książki przed datą zwrotu.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password Modal -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changePasswordModalLabel">Zmień Hasło</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/change-password}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nazwa Użytkownika</label>
+                                <!-- This will display the username from session in the form input -->
+                                <input type="text" class="form-control" id="username" name="username" th:value="${session.username}" readonly required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Obecne Hasło</label>
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Nowe Hasło</label>
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Potwierdź Nowe Hasło</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required/>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Zmień Hasło</button>
+                            </div>
+                        </form>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+</main>
+
+
+<footer>
+    <div class="footerContainer">
+        <div class="row footer-contact">
+            <div class="col-md-4 Kontakt">
+                <h5>Kontakt</h5>
+                <p><i class="fas fa-envelope"></i> kontakt@biblioteka.pl</p>
+                <p><i class="fas fa-phone"></i> +48 123 456 789</p>
+                <p><i class="fas fa-map-marker-alt"></i> ul. Czarnieckiego 16, 37-500 Jarosław</p>
+                <div class="footer-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <div id="copyright">
+                    <p class="mt-3">&copy; 2025 Biblioteka Akademicka. Wszystkie prawa zastrzeżone.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+</footer>
+
+
+<div class="footerBottom">
+    <p>Designed by
+        <a class="designer" href="https://t.me/Mus1nQ3" target="_blank"> Mus1n </a>&
+        <a class="designer" href="https://t.me/AdrianKruba" target="_blank"> Kruba </a>
+    </p>
+
+</div>
+
+
+
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/Scripts.js"></script>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
